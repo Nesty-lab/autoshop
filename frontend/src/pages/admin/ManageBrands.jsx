@@ -12,6 +12,8 @@ export default function ManageBrands() {
   const [name, setName] = useState('')
   const [logoFile, setLogoFile] = useState(null)
   const [saving, setSaving] = useState(false)
+  const [editingId, setEditingId] = useState(null)
+  const [editingName, setEditingName] = useState('')
 
   async function loadBrands() {
     const { data } = await supabase.from('brands').select('*').order('name')
@@ -47,6 +49,13 @@ export default function ManageBrands() {
     loadBrands()
   }
 
+  async function handleEdit(brand) {
+    if (!editingName.trim()) return
+    await supabase.from('brands').update({ name: editingName.trim() }).eq('id', brand.id)
+    setEditingId(null)
+    loadBrands()
+  }
+
   return (
     <div>
       <form onSubmit={handleAdd} className="card p-6 mb-8 space-y-4 max-w-lg">
@@ -71,7 +80,14 @@ export default function ManageBrands() {
                 event.target.src = fallbackLogo(brand.name)
               }}
             />
-            <span className="font-semibold">{brand.name}</span>
+            {editingId === brand.id ? (
+              <input value={editingName} onChange={(event) => setEditingName(event.target.value)} className="w-full rounded border border-steel bg-carbon px-2 py-1 text-sm" />
+            ) : <span className="font-semibold">{brand.name}</span>}
+            {editingId === brand.id ? (
+              <button onClick={() => handleEdit(brand)} className="text-xs font-bold text-ignition">Save</button>
+            ) : (
+              <button onClick={() => { setEditingId(brand.id); setEditingName(brand.name) }} className="text-xs text-ignition">Edit</button>
+            )}
             <button onClick={() => handleDelete(brand.id)} className="text-xs text-chrome/50 hover:text-ignition">Delete</button>
           </div>
         ))}

@@ -8,6 +8,8 @@ export default function ManageModels() {
   const [name, setName] = useState('')
   const [imageFile, setImageFile] = useState(null)
   const [saving, setSaving] = useState(false)
+  const [editingId, setEditingId] = useState(null)
+  const [editingName, setEditingName] = useState('')
 
   async function loadData() {
     const [{ data: brandData }, { data: modelData }] = await Promise.all([
@@ -48,6 +50,13 @@ export default function ManageModels() {
     loadData()
   }
 
+  async function handleEdit(model) {
+    if (!editingName.trim()) return
+    await supabase.from('models').update({ name: editingName.trim() }).eq('id', model.id)
+    setEditingId(null)
+    loadData()
+  }
+
   return (
     <div>
       <form onSubmit={handleAdd} className="card p-6 mb-8 space-y-4 max-w-lg">
@@ -70,8 +79,15 @@ export default function ManageModels() {
         {models.map((model) => (
           <div key={model.id} className="card p-4">
             {model.image_url && <img src={model.image_url} alt={model.name} className="w-full h-24 object-cover rounded-sm mb-2" />}
-            <p className="font-semibold">{model.name}</p>
+            {editingId === model.id ? (
+              <input value={editingName} onChange={(event) => setEditingName(event.target.value)} className="w-full rounded border border-steel bg-carbon px-2 py-1 text-sm" />
+            ) : <p className="font-semibold">{model.name}</p>}
             <p className="text-xs text-chrome/50">{model.brands?.name}</p>
+            {editingId === model.id ? (
+              <button onClick={() => handleEdit(model)} className="text-xs font-bold text-ignition mt-2">Save</button>
+            ) : (
+              <button onClick={() => { setEditingId(model.id); setEditingName(model.name) }} className="text-xs text-ignition mt-2">Edit</button>
+            )}
             <button onClick={() => handleDelete(model.id)} className="text-xs text-chrome/50 hover:text-ignition mt-2">Delete</button>
           </div>
         ))}

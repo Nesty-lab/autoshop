@@ -5,9 +5,12 @@ export default function ManageParts() {
   const [models, setModels] = useState([])
   const [parts, setParts] = useState([])
   const [modelId, setModelId] = useState('')
+  const [brandId, setBrandId] = useState('')
   const [form, setForm] = useState({ name: '', description: '', price: '', stock_quantity: '' })
   const [imageFile, setImageFile] = useState(null)
   const [saving, setSaving] = useState(false)
+  const [editingId, setEditingId] = useState(null)
+  const [editingPart, setEditingPart] = useState(null)
 
   async function loadData() {
     const [{ data: modelData }, { data: partData }] = await Promise.all([
@@ -79,14 +82,34 @@ export default function ManageParts() {
     loadData()
   }
 
+  async function handleEditPart() {
+    if (!editingPart?.name?.trim() || !editingPart.model_id) return
+    await supabase.from('parts').update({
+      name: editingPart.name.trim(),
+      description: editingPart.description || '',
+      price: parseFloat(editingPart.price) || 0,
+      model_id: editingPart.model_id,
+    }).eq('id', editingPart.id)
+    setEditingId(null)
+    setEditingPart(null)
+    loadData()
+  }
+
+  const availableModels = models.filter((model) => !brandId || model.brand_id === brandId)
+
   return (
     <div>
       <form onSubmit={handleAdd} className="card p-6 mb-8 space-y-4 max-w-lg">
         <h2 className="font-display font-semibold text-lg">Add Part</h2>
+        <select required value={brandId} onChange={(e) => { setBrandId(e.target.value); setModelId('') }}
+          className="w-full bg-carbon border border-steel rounded-sm px-4 py-3 focus:outline-none focus:border-ignition">
+          <option value="">Select category/brand...</option>
+          {[...new Map(models.map((model) => [model.brand_id, model.brands?.name])).entries()].map(([id, name]) => <option key={id} value={id}>{name}</option>)}
+        </select>
         <select required value={modelId} onChange={(e) => setModelId(e.target.value)}
           className="w-full bg-carbon border border-steel rounded-sm px-4 py-3 focus:outline-none focus:border-ignition">
-          <option value="">Select model...</option>
-          {models.map((m) => <option key={m.id} value={m.id}>{m.brands?.name} — {m.name}</option>)}
+          <option value="">Select model for this brand...</option>
+          {availableModels.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
         </select>
         <input required placeholder="Part name (e.g. Front Bumper)" value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -115,7 +138,17 @@ export default function ManageParts() {
           <div key={part.id} className="card p-4 flex flex-wrap items-center gap-4">
             <img src={part.image_url} alt={part.name} className="w-16 h-16 object-cover rounded-sm bg-steel" />
             <div className="flex-1 min-w-[150px]">
-              <p className="font-semibold">{part.name}</p>
+              {editingId === part.id ? (
+                <div className="space-y-2">
+                  <input value={editingPart.name} onChange={(event) => setEditingPart({ ...editingPart, name: event.target.value })} className="w-full rounded border border-steel bg-carbon px-2 py-1 text-sm" />
+                  <select value={editingPart.model_id} onChange={(event) => setEditingPart({ ...editingPart, model_id: event.target.value })} className="w-full rounded border border-steel bg-carbon px-2 py-1 text-xs">
+                    {models.map((model) => <option key={model.id} value={model.id}>{model.brands?.name} - {model.name}</option>)}
+                  </select>
+                  <textarea value={editingPart.description || ''} onChange={(event) => setEditingPart({ ...editingPart, description: event.target.value })} className="w-full rounded border border-steel bg-carbon px-2 py-1 text-xs" rows="2" />
+                  <input type="number" step="0.01" value={editingPart.price} onChange={(event) => setEditingPart({ ...editingPart, price: event.target.value })} className="w-full rounded border border-steel bg-carbon px-2 py-1 text-sm" />
+                  <button onClick={handleEditPart} className="text-xs font-bold text-ignition">Save changes</button>
+                </div>
+              ) : <p className="font-semibold">{part.name}</p>}
               <p className="text-xs text-chrome/50">{part.models?.brands?.name} — {part.models?.name}</p>
               <p className="text-ignition font-bold">GHS {Number(part.price).toFixed(2)}</p>
             </div>
@@ -129,6 +162,10 @@ export default function ManageParts() {
 
             {part.stock_quantity <= 0 && (
               <span className="text-xs font-bold text-ignition uppercase">Sold Out</span>
+            )}
+
+            {editingId !== part.id && (
+              <button onClick={() => { setEditingId(part.id); setEditingPart({ ...part }) }} className="text-xs font-semibold text-ignition">Edit</button>
             )}
 
             <label className="btn-outline text-xs py-2 px-3 cursor-pointer">

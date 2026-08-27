@@ -30,7 +30,7 @@ export default function AdminDashboard() {
         <div className="flex items-center gap-3 border-b border-white/10 px-7 py-7">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ff9900] text-xl font-black text-white">D</div>
           <div>
-            <p className="text-lg font-black tracking-tight">Dave</p>
+            <p className="text-lg font-black tracking-tight">AgyaPee</p>
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/45">Admin workspace</p>
           </div>
         </div>

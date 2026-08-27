@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient'
 import BrandLogo from '../components/BrandLogo'
+import { useCart } from '../context/CartContext'
 
 const createBrandLogo = (name, accent = '#ff9900') => {
   const initials = name
@@ -55,6 +56,7 @@ const demoProducts = [
 ]
 
 export default function Home() {
+  const { addToCart } = useCart()
   const [brands, setBrands] = useState([])
   const [featuredParts, setFeaturedParts] = useState([])
 
@@ -182,7 +184,7 @@ export default function Home() {
                     <p className="text-xl font-bold price-text">GHS {Number(product.price).toFixed(2)}</p>
                     <p className="text-[11px] text-[#757575] line-through">GHS {(Number(product.price) * 1.2).toFixed(2)}</p>
                   </div>
-                  <Link to="/cart" className="btn-primary rounded-full px-3 py-2 text-xs">Add</Link>
+                  <button type="button" onClick={() => addToCart(product)} className="btn-primary rounded-full px-3 py-2 text-xs">Add</button>
                 </div>
               </div>
             </div>

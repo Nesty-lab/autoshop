@@ -171,7 +171,7 @@ export default function BrandModels() {
   if (loading) return <div className="max-w-7xl mx-auto px-4 py-10">Loading...</div>
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
+    <div className="min-h-screen bg-[#f5f5f5] text-[#1d1d1d] max-w-7xl mx-auto px-4 py-10">
       <div className="mb-8 flex items-center gap-4">
         <BrandLogo name={brand?.name || 'Car'} src={brand?.logo_url} className="h-16 w-16 rounded-2xl" />
         <div>

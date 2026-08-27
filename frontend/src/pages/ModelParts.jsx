@@ -107,7 +107,7 @@ export default function ModelParts() {
   if (loading) return <div className="max-w-7xl mx-auto px-4 py-10">Loading...</div>
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
+    <div className="min-h-screen bg-[#f5f5f5] text-[#1d1d1d] max-w-7xl mx-auto px-4 py-10">
       {model?.image_url && (
         <div className="mb-6 overflow-hidden rounded-3xl border border-[#e5e5e5] bg-white shadow-sm">
           <img src={model.image_url} alt={model?.name} className="h-64 w-full object-cover md:h-80" />

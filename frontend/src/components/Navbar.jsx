@@ -19,7 +19,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-[#e5e5e5]">
       <div className="top-strip">
         <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between text-[11px]">
-          <span>Sell on Dave</span>
+          <span>Sell on AgyaPee</span>
           <div className="hidden sm:flex items-center gap-4">
             <span>Customer Care</span>
             <span>Track Order</span>
@@ -31,7 +31,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 py-3">
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center shrink-0">
-            <span className="text-2xl font-black tracking-tight text-[#ff9900]">DAVE</span>
+            <span className="text-2xl font-black tracking-tight text-[#ff9900]">AGYAPEE</span>
           </Link>
 
           <form onSubmit={handleSearch} className="flex-1 min-w-[200px] flex items-center gap-2">

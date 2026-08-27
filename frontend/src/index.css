@@ -68,6 +68,12 @@ h1, h2, h3, h4 {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.storefront-page h1,
+.storefront-page h2,
+.storefront-page h3 {
+  color: #1d1d1d;
+}
+
 .btn-primary {
   @apply inline-flex items-center justify-center font-bold px-5 py-3 rounded-full transition-colors duration-200;
   background: var(--jumia-orange);

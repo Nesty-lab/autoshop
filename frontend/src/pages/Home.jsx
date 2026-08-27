@@ -88,7 +88,7 @@ export default function Home() {
   }, [])
 
   return (
-    <div className="bg-[#f5f5f5] pb-10">
+    <div className="storefront-page pb-10">
       <section className="hero-card px-4 py-8 md:py-12">
         <div className="max-w-7xl mx-auto grid gap-6 lg:grid-cols-[1.35fr_0.65fr] items-center">
           <div className="rounded-[28px] bg-[#fffaf1] border border-[#f8ddb0] p-6 md:p-10 shadow-sm">
@@ -134,7 +134,10 @@ export default function Home() {
 
       <section className="max-w-7xl mx-auto px-4 mt-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="section-title">Popular categories</h2>
+          <div>
+            <p className="section-kicker">Find the right fit</p>
+            <h2 className="section-title">Shop by car brand</h2>
+          </div>
           <Link to="/brands" className="text-sm font-bold text-[#ff9900]">View all</Link>
         </div>
 
@@ -153,7 +156,10 @@ export default function Home() {
 
       <section className="max-w-7xl mx-auto px-4 mt-10">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="section-title">Hot deals</h2>
+          <div>
+            <p className="section-kicker">Ready for the road</p>
+            <h2 className="section-title">Featured parts</h2>
+          </div>
           <Link to="/brands" className="text-sm font-bold text-[#ff9900]">See more</Link>
         </div>
 

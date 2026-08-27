@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
@@ -7,6 +7,7 @@ export default function Navbar() {
   const { itemCount } = useCart()
   const { user, signOut } = useAuth()
   const [query, setQuery] = useState('')
+  const [menuOpen, setMenuOpen] = useState(false)
   const navigate = useNavigate()
 
   function handleSearch(e) {
@@ -47,19 +48,27 @@ export default function Navbar() {
             </button>
           </form>
 
+          <button
+            type="button"
+            aria-label="Toggle navigation menu"
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#e5e5e5] text-xl text-[#2d2d2d] lg:hidden"
+          >
+            {menuOpen ? '×' : '☰'}
+          </button>
+
           <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-[#2d2d2d]">
-            <Link to="/" className="hover:text-[#ff9900]">Home</Link>
-            <Link to="/brands" className="hover:text-[#ff9900]">Categories</Link>
-            <Link to="/search?q=parts" className="hover:text-[#ff9900]">Products</Link>
-            <Link to="/support" className="hover:text-[#ff9900]">Support</Link>
-            <Link to="/cart" className="relative inline-flex items-center gap-2 hover:text-[#ff9900]">
+            {[['/', 'Home'], ['/brands', 'Categories'], ['/search?q=parts', 'Products'], ['/support', 'Support']].map(([to, label]) => (
+              <NavLink key={to} to={to} className={({ isActive }) => isActive ? 'font-bold text-[#ff9900]' : 'hover:text-[#ff9900]'}>{label}</NavLink>
+            ))}
+            <NavLink to="/cart" className={({ isActive }) => `relative inline-flex items-center gap-2 ${isActive ? 'font-bold text-[#ff9900]' : 'hover:text-[#ff9900]'}`}>
               Cart
               {itemCount > 0 && (
                 <span className="inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#ff9900] px-1 text-[10px] font-bold text-white">
                   {itemCount}
                 </span>
               )}
-            </Link>
+            </NavLink>
             {user ? (
               <button onClick={signOut} className="hover:text-[#ff9900]">Sign out</button>
             ) : (
@@ -68,12 +77,10 @@ export default function Navbar() {
           </nav>
         </div>
 
-        <nav className="mt-3 flex flex-wrap items-center gap-3 overflow-x-auto pb-1 text-sm text-[#4d4d4d] lg:hidden">
-          <Link to="/" className="rounded-full bg-[#fff3dd] px-3 py-1.5 font-medium text-[#1d1d1d]">Home</Link>
-          <Link to="/brands" className="rounded-full hover:bg-[#f5f5f5] px-3 py-1.5">Categories</Link>
-          <Link to="/search?q=parts" className="rounded-full hover:bg-[#f5f5f5] px-3 py-1.5">Products</Link>
-          <Link to="/support" className="rounded-full hover:bg-[#f5f5f5] px-3 py-1.5">Support</Link>
-          <Link to="/cart" className="rounded-full hover:bg-[#f5f5f5] px-3 py-1.5">Cart</Link>
+        <nav className={`${menuOpen ? 'flex' : 'hidden'} mt-3 flex-col gap-1 border-t border-[#f0f0f0] pt-3 text-sm text-[#4d4d4d] lg:hidden`}>
+          {[['/', 'Home'], ['/brands', 'Categories'], ['/search?q=parts', 'Products'], ['/support', 'Support'], ['/cart', 'Cart']].map(([to, label]) => (
+            <NavLink key={to} to={to} onClick={() => setMenuOpen(false)} className={({ isActive }) => `rounded-xl px-3 py-3 font-semibold ${isActive ? 'bg-[#fff3dd] text-[#d97900]' : 'hover:bg-[#f5f5f5]'}`}>{label}</NavLink>
+          ))}
         </nav>
       </div>
     </header>

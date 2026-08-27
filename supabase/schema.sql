@@ -102,25 +102,37 @@ create policy "admins manage orders" on orders for all using (exists (select 1 f
 drop policy if exists "admins manage support" on support_messages;
 create policy "admins manage support" on support_messages for all using (exists (select 1 from admin_users where id = auth.uid())) with check (exists (select 1 from admin_users where id = auth.uid()));
 -- Public (anyone) can READ brands, models, available parts
+drop policy if exists "public read brands" on brands;
 create policy "public read brands" on brands for select using (true);
+drop policy if exists "public read models" on models;
 create policy "public read models" on models for select using (true);
+drop policy if exists "public read parts" on parts;
 create policy "public read parts" on parts for select using (true);
 
 -- Anyone can INSERT an order + order items (guest checkout) and a support message
+drop policy if exists "anyone can create orders" on orders;
 create policy "anyone can create orders" on orders for insert with check (true);
+drop policy if exists "anyone can create order items" on order_items;
 create policy "anyone can create order items" on order_items for insert with check (true);
+drop policy if exists "anyone can create support messages" on support_messages;
 create policy "anyone can create support messages" on support_messages for insert with check (true);
 
 -- Customers can view only their own orders (if logged in)
+drop policy if exists "users read own orders" on orders;
 create policy "users read own orders" on orders for select using (auth.uid() = user_id);
 
 -- Admins (checked via admin_users table) can do everything
 drop policy if exists "admins manage support" on support_messages;
 create policy "admins manage support" on support_messages for all using (exists (select 1 from admin_users where id = auth.uid())) with check (exists (select 1 from admin_users where id = auth.uid()));
+drop policy if exists "admins manage brands" on brands;
 create policy "admins manage brands" on brands for all using (exists (select 1 from admin_users where id = auth.uid()));
+drop policy if exists "admins manage models" on models;
 create policy "admins manage models" on models for all using (exists (select 1 from admin_users where id = auth.uid()));
+drop policy if exists "admins manage parts" on parts;
 create policy "admins manage parts" on parts for all using (exists (select 1 from admin_users where id = auth.uid()));
+drop policy if exists "admins manage orders" on orders;
 create policy "admins manage orders" on orders for all using (exists (select 1 from admin_users where id = auth.uid()));
+drop policy if exists "admins manage support" on support_messages;
 create policy "admins manage support" on support_messages for all using (exists (select 1 from admin_users where id = auth.uid()));
 
 -- ============================================================

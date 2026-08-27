@@ -38,7 +38,7 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="max-w-md mx-auto px-4 py-24">
+    <div className="admin-workspace max-w-md mx-auto px-4 py-24">
       <h1 className="text-3xl mb-2 text-center">Admin Login</h1>
       <p className="text-center text-chrome/50 text-sm mb-8">Restricted access — staff only</p>
       <form onSubmit={handleSubmit} className="space-y-4">

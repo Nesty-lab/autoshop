@@ -23,7 +23,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f4f6f8] text-[#27303a]">
+    <div className="admin-workspace min-h-screen bg-[#f4f6f8] text-[#27303a]">
       {menuOpen && <button aria-label="Close menu" onClick={closeMenu} className="fixed inset-0 z-30 bg-[#101820]/50 lg:hidden" />}
 
       <aside className={`fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-[#101820] text-white shadow-2xl transition-transform duration-200 lg:translate-x-0 ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`}>

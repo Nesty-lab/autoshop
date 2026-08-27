@@ -30,6 +30,34 @@ body {
   background-size: 22px 22px;
 }
 
+.admin-workspace .text-chrome\/50,
+.admin-workspace .text-chrome\/60,
+.admin-workspace .text-chrome\/70,
+.admin-workspace .text-chrome\/80,
+.admin-workspace .text-chrome\/40 {
+  color: #64748b !important;
+}
+
+.admin-workspace input,
+.admin-workspace select,
+.admin-workspace textarea {
+  color: #f8fafc;
+}
+
+.admin-workspace input::placeholder,
+.admin-workspace textarea::placeholder {
+  color: #94a3b8;
+}
+
+.admin-workspace option {
+  color: #f8fafc;
+  background: #101820;
+}
+
+.admin-workspace .card {
+  color: #27303a;
+}
+
 img {
   display: block;
   max-width: 100%;

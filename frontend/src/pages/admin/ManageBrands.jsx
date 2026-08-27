@@ -64,6 +64,15 @@ export default function ManageBrands() {
     loadBrands()
   }
 
+  async function handleReplaceLogo(brand, file) {
+    const path = `brands/${brand.id}.png`
+    const { error: uploadError } = await supabase.storage.from('part-images').upload(path, file, { upsert: true })
+    if (uploadError) return
+    const { data } = supabase.storage.from('part-images').getPublicUrl(path)
+    await supabase.from('brands').update({ logo_url: `${data.publicUrl}?t=${Date.now()}` }).eq('id', brand.id)
+    loadBrands()
+  }
+
   return (
     <div>
       <form onSubmit={handleAdd} className="card p-6 mb-8 space-y-4 max-w-lg">
@@ -96,6 +105,10 @@ export default function ManageBrands() {
             ) : (
               <button onClick={() => { setEditingId(brand.id); setEditingName(brand.name) }} className="text-xs text-ignition">Edit</button>
             )}
+            <label className="cursor-pointer text-xs text-ignition">
+              Change logo
+              <input type="file" accept="image/*" className="hidden" onChange={(event) => event.target.files[0] && handleReplaceLogo(brand, event.target.files[0])} />
+            </label>
             <button onClick={() => handleDelete(brand.id)} className="text-xs text-chrome/50 hover:text-ignition">Delete</button>
           </div>
         ))}

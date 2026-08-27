@@ -77,6 +77,15 @@ export default function ManageModels() {
     loadData()
   }
 
+  async function handleReplaceImage(model, file) {
+    const path = `models/${model.id}.jpg`
+    const { error: uploadError } = await supabase.storage.from('part-images').upload(path, file, { upsert: true })
+    if (uploadError) return
+    const { data } = supabase.storage.from('part-images').getPublicUrl(path)
+    await supabase.from('models').update({ image_url: `${data.publicUrl}?t=${Date.now()}` }).eq('id', model.id)
+    loadData()
+  }
+
   return (
     <div>
       <form onSubmit={handleAdd} className="card p-6 mb-8 space-y-4 max-w-lg">
@@ -108,6 +117,10 @@ export default function ManageModels() {
             ) : (
               <button onClick={() => { setEditingId(model.id); setEditingName(model.name) }} className="text-xs text-ignition mt-2">Edit</button>
             )}
+            <label className="mt-2 cursor-pointer text-xs text-ignition">
+              Change image
+              <input type="file" accept="image/*" className="hidden" onChange={(event) => event.target.files[0] && handleReplaceImage(model, event.target.files[0])} />
+            </label>
             <button onClick={() => handleDelete(model.id)} className="text-xs text-chrome/50 hover:text-ignition mt-2">Delete</button>
           </div>
         ))}

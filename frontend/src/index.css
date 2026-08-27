@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --jumia-orange: #ff9900;
+  --jumia-orange-deep: #f68b1e;
+  --jumia-dark: #1f1f1f;
+  --jumia-soft: #f5f5f5;
+  --jumia-card: #ffffff;
+  --jumia-border: #e5e5e5;
+  --jumia-text: #2d2d2d;
+  --jumia-muted: #757575;
+  --jumia-success: #2e7d32;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-[#f5f5f5] text-[#2d2d2d] font-sans antialiased;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+h1, h2, h3, h4 {
+  @apply tracking-tight text-[#1d1d1d];
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center font-bold px-5 py-3 rounded-full transition-colors duration-200;
+  background: var(--jumia-orange);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--jumia-orange-deep);
+}
+
+.btn-outline {
+  @apply border border-[#f68b1e] text-[#f68b1e] bg-white font-bold px-5 py-3 rounded-full transition-colors duration-200;
+}
+
+.btn-outline:hover {
+  background: #fff3df;
+}
+
+.card {
+  @apply bg-white border border-[#e5e5e5] rounded-xl overflow-hidden transition-all duration-200;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+}
+
+.card:hover {
+  box-shadow: 0 10px 24px rgba(17, 17, 17, 0.08);
+  transform: translateY(-1px);
+}
+
+.top-strip {
+  background: #1f1f1f;
+  color: #f5f5f5;
+  font-size: 12px;
+}
+
+.search-input {
+  @apply w-full border border-[#e5e5e5] bg-white rounded-full px-4 py-3 text-sm text-[#2d2d2d] placeholder:text-[#8a8a8a] focus:outline-none focus:ring-2 focus:ring-[#ffb84d];
+}
+
+.hero-card {
+  background: linear-gradient(135deg, #fff4e5 0%, #ffe3b3 30%, #fff 100%);
+}
+
+.category-tile {
+  @apply bg-white border border-[#e5e5e5] rounded-2xl p-4 flex flex-col items-center justify-center gap-3 min-h-[130px] text-center transition-transform duration-200;
+}
+
+.category-tile:hover {
+  transform: translateY(-2px);
+  border-color: #ffb84d;
+}
+
+.product-card {
+  @apply bg-white border border-[#e5e5e5] rounded-xl overflow-hidden flex flex-col h-full;
+}
+
+.product-card:hover {
+  border-color: #ffb84d;
+}
+
+.section-title {
+  @apply text-2xl font-bold text-[#1d1d1d];
+}
+
+.price-text {
+  color: var(--jumia-orange);
+}
+
+.tag-chip {
+  @apply inline-flex items-center rounded-full bg-[#fff1d9] px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-[#b56600];
+}
+
+.badge-sold {
+  @apply absolute left-3 top-3 bg-[#fff] text-[#d32f2f] border border-[#f5c7c7] text-[10px] font-bold px-2 py-1 rounded-full;
+}
+
+.badge-discount {
+  @apply absolute right-3 top-3 bg-[#ff9900] text-white text-[10px] font-bold px-2 py-1 rounded-full;
+}
+
+.deal-banner {
+  background: linear-gradient(90deg, #ffefcf 0%, #ffe3a3 100%);
+  border: 1px solid #f6d48f;
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    @apply text-xl;
+  }
+}

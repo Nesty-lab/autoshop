@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { useCart } from '../context/CartContext'
 
 export default function ProductCard({ part }) {
   const { addToCart } = useCart()
+  const [added, setAdded] = useState(false)
   const soldOut = !part.is_available || part.stock_quantity <= 0
 
   return (
@@ -44,10 +46,14 @@ export default function ProductCard({ part }) {
 
         <button
           disabled={soldOut}
-          onClick={() => addToCart(part)}
+          onClick={() => {
+            addToCart(part)
+            setAdded(true)
+            window.setTimeout(() => setAdded(false), 1400)
+          }}
           className="btn-primary mt-4 w-full disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {soldOut ? 'Unavailable' : 'Add to cart'}
+          {soldOut ? 'Unavailable' : added ? 'Added to cart' : 'Add to cart'}
         </button>
       </div>
     </div>

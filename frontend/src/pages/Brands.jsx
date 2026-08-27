@@ -83,8 +83,8 @@ export default function Brands() {
   }, [])
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
-      <h1 className="text-3xl mb-8">All Brands</h1>
+    <div className="min-h-screen bg-[#f5f5f5] text-[#1d1d1d] max-w-7xl mx-auto px-4 py-10">
+      <h1 className="mb-8 text-3xl !text-[#1d1d1d]">All Brands</h1>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -92,7 +92,7 @@ export default function Brands() {
           {brands.map((brand) => (
             <Link key={brand.id} to={`/brands/${brand.id}`} className="card flex flex-col items-center justify-center p-6 gap-3">
               <BrandLogo name={brand.name} src={brand.logo_url} />
-              <span className="font-display font-semibold">{brand.name}</span>
+              <span className="font-display font-semibold !text-[#1d1d1d]">{brand.name}</span>
             </Link>
           ))}
         </div>

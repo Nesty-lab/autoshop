@@ -63,6 +63,12 @@ export default function Checkout() {
     setSubmitting(true)
 
     try {
+      if (paymentMethod === 'online' && !form.email.trim()) {
+        setError('Email is required when paying with Paystack. Choose Pay on Delivery if you do not want to provide an email.')
+        setSubmitting(false)
+        return
+      }
+
       const order = await createOrder()
 
       if (paymentMethod === 'delivery') {
@@ -100,7 +106,7 @@ export default function Checkout() {
       <form onSubmit={handleSubmit} className="space-y-5">
         <input name="name" required placeholder="Full name" value={form.name} onChange={handleChange}
           className="w-full bg-charcoal border border-steel rounded-sm px-4 py-3 focus:outline-none focus:border-ignition" />
-        <input name="email" type="email" required placeholder="Email address" value={form.email} onChange={handleChange}
+        <input name="email" type="email" required={paymentMethod === 'online'} placeholder={paymentMethod === 'online' ? 'Email address (required for Paystack)' : 'Email address (optional)'} value={form.email} onChange={handleChange}
           className="w-full bg-charcoal border border-steel rounded-sm px-4 py-3 focus:outline-none focus:border-ignition" />
         <input name="phone" required placeholder="Phone number" value={form.phone} onChange={handleChange}
           className="w-full bg-charcoal border border-steel rounded-sm px-4 py-3 focus:outline-none focus:border-ignition" />

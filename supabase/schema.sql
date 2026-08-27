@@ -39,7 +39,7 @@ create table if not exists parts (
 create table if not exists orders (
   id uuid primary key default gen_random_uuid(),
   customer_name text not null,
-  customer_email text not null,
+  customer_email text,
   customer_phone text not null,
   delivery_address text,
   payment_method text check (payment_method in ('online', 'delivery')) not null,
@@ -83,6 +83,7 @@ create table if not exists admin_users (
 
 alter table support_messages add column if not exists reply text;
 alter table support_messages add column if not exists replied_at timestamptz;
+alter table orders alter column customer_email drop not null;
 
 alter table brands enable row level security;
 

@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 
 export default function Cart() {
-  const { items, updateQuantity, removeFromCart, total } = useCart()
+  const { items, updateQuantity, removeFromCart, clearCart, total } = useCart()
   const navigate = useNavigate()
 
   if (items.length === 0) {
@@ -16,7 +16,18 @@ export default function Cart() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
-      <h1 className="text-3xl mb-8">Your Cart</h1>
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-3xl">Your Cart</h1>
+        <button
+          type="button"
+          onClick={() => {
+            if (confirm('Remove all items from your cart?')) clearCart()
+          }}
+          className="rounded-full border border-[#d32f2f] px-4 py-2 text-sm font-bold text-[#d32f2f] hover:bg-[#fff1f1]"
+        >
+          Clear cart
+        </button>
+      </div>
       <div className="space-y-4">
         {items.map((item) => (
           <div key={item.id} className="card flex items-center gap-4 p-4">

@@ -69,7 +69,7 @@ export default function Home() {
       try {
         const [{ data: brandData }, { data: partsData }] = await Promise.all([
           supabase.from('brands').select('*').order('name'),
-          supabase.from('parts').select('*, models(name, brands(name))').order('created_at', { ascending: false }).limit(4),
+          supabase.from('parts').select('*, models(name, brands(name))').order('created_at', { ascending: false }),
         ])
 
         setBrands((brandData && brandData.length ? brandData : demoBrands).map((brand) => ({

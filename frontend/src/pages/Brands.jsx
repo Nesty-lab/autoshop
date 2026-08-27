@@ -67,7 +67,8 @@ export default function Brands() {
           console.error('Failed to load brands:', error)
           setBrands(demoBrands)
         } else {
-          setBrands((data || demoBrands).map((brand) => ({
+          const availableBrands = data && data.length ? data : demoBrands
+          setBrands(availableBrands.map((brand) => ({
             ...brand,
             logo_url: brand.logo_url || createBrandLogo(brand.name),
           })))

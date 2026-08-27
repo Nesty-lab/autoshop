@@ -68,6 +68,8 @@ create table if not exists support_messages (
   name text not null,
   email text not null,
   message text not null,
+  reply text,
+  replied_at timestamptz,
   status text check (status in ('open', 'resolved')) default 'open',
   created_at timestamptz default now()
 );
@@ -78,6 +80,9 @@ create table if not exists admin_users (
   full_name text,
   created_at timestamptz default now()
 );
+
+alter table support_messages add column if not exists reply text;
+alter table support_messages add column if not exists replied_at timestamptz;
 
 -- ============================================================
 -- Row Level Security
@@ -104,6 +109,8 @@ create policy "anyone can create support messages" on support_messages for inser
 create policy "users read own orders" on orders for select using (auth.uid() = user_id);
 
 -- Admins (checked via admin_users table) can do everything
+drop policy if exists "admins manage support" on support_messages;
+create policy "admins manage support" on support_messages for all using (exists (select 1 from admin_users where id = auth.uid())) with check (exists (select 1 from admin_users where id = auth.uid()));
 create policy "admins manage brands" on brands for all using (exists (select 1 from admin_users where id = auth.uid()));
 create policy "admins manage models" on models for all using (exists (select 1 from admin_users where id = auth.uid()));
 create policy "admins manage parts" on parts for all using (exists (select 1 from admin_users where id = auth.uid()));

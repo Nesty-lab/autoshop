@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { supabase } from '../lib/supabaseClient'
+import { supabase, isSupabaseConfigured } from '../lib/supabaseClient'
 import ProductCard from '../components/ProductCard'
 
 export default function Search() {
@@ -10,16 +10,40 @@ export default function Search() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!q) return
+    if (!q) {
+      setResults([])
+      setLoading(false)
+      return
+    }
     setLoading(true)
-    supabase
-      .from('parts')
-      .select('*, models(name, brands(name))')
-      .ilike('name', `%${q}%`)
-      .then(({ data }) => {
-        setResults(data || [])
+    async function searchParts() {
+      if (!isSupabaseConfigured) {
+        setResults([])
         setLoading(false)
-      })
+        return
+      }
+
+      const { data, error } = await supabase
+        .from('parts')
+        .select('*, models(name, brands(name))')
+        .order('created_at', { ascending: false })
+
+      if (error) {
+        console.error('Part search failed:', error)
+        setResults([])
+      } else {
+        const searchTerm = q.trim().toLowerCase()
+        setResults((data || []).filter((part) => [
+          part.name,
+          part.description,
+          part.models?.name,
+          part.models?.brands?.name,
+        ].some((value) => value?.toLowerCase().includes(searchTerm))))
+      }
+      setLoading(false)
+    }
+
+    searchParts()
   }, [q])
 
   return (

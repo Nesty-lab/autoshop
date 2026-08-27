@@ -84,17 +84,23 @@ create table if not exists admin_users (
 alter table support_messages add column if not exists reply text;
 alter table support_messages add column if not exists replied_at timestamptz;
 
--- ============================================================
--- Row Level Security
--- ============================================================
 alter table brands enable row level security;
-alter table models enable row level security;
-alter table parts enable row level security;
-alter table orders enable row level security;
-alter table order_items enable row level security;
-alter table support_messages enable row level security;
-alter table admin_users enable row level security;
 
+drop policy if exists "users can check own admin record" on admin_users;
+create policy "users can check own admin record" on admin_users
+for select to authenticated using (id = auth.uid());
+
+alter table parts enable row level security;
+drop policy if exists "admins manage brands" on brands;
+create policy "admins manage brands" on brands for all using (exists (select 1 from admin_users where id = auth.uid())) with check (exists (select 1 from admin_users where id = auth.uid()));
+drop policy if exists "admins manage models" on models;
+create policy "admins manage models" on models for all using (exists (select 1 from admin_users where id = auth.uid())) with check (exists (select 1 from admin_users where id = auth.uid()));
+drop policy if exists "admins manage parts" on parts;
+create policy "admins manage parts" on parts for all using (exists (select 1 from admin_users where id = auth.uid())) with check (exists (select 1 from admin_users where id = auth.uid()));
+drop policy if exists "admins manage orders" on orders;
+create policy "admins manage orders" on orders for all using (exists (select 1 from admin_users where id = auth.uid())) with check (exists (select 1 from admin_users where id = auth.uid()));
+drop policy if exists "admins manage support" on support_messages;
+create policy "admins manage support" on support_messages for all using (exists (select 1 from admin_users where id = auth.uid())) with check (exists (select 1 from admin_users where id = auth.uid()));
 -- Public (anyone) can READ brands, models, available parts
 create policy "public read brands" on brands for select using (true);
 create policy "public read models" on models for select using (true);

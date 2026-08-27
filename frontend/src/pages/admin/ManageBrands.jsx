@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabaseClient'
+import { demoBrands } from '../BrandModels'
 
 function fallbackLogo(name) {
   const initials = name.slice(0, 2).toUpperCase()
@@ -16,8 +17,15 @@ export default function ManageBrands() {
   const [editingName, setEditingName] = useState('')
 
   async function loadBrands() {
-    const { data } = await supabase.from('brands').select('*').order('name')
-    setBrands(data || [])
+    const { data, error } = await supabase.from('brands').select('*').order('name')
+    if (error) return
+    if (!data?.length) {
+      await supabase.from('brands').insert(demoBrands.map(({ name, logo_url }) => ({ name, logo_url })))
+      const { data: seededBrands } = await supabase.from('brands').select('*').order('name')
+      setBrands(seededBrands || [])
+      return
+    }
+    setBrands(data)
   }
 
   useEffect(() => {

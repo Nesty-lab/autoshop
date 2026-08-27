@@ -24,7 +24,7 @@ const createBrandLogo = (name, accent = '#ff9900') => {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`
 }
 
-const demoBrands = [
+export const demoBrands = [
   { id: 'bmw', name: 'BMW', logo_url: createBrandLogo('BMW', '#1d3557') },
   { id: 'toyota', name: 'Toyota', logo_url: createBrandLogo('Toyota', '#d62828') },
   { id: 'mercedes', name: 'Mercedes-Benz', logo_url: createBrandLogo('Mercedes', '#0d1b2a') },
@@ -47,7 +47,7 @@ const demoBrands = [
   { id: 'land-rover', name: 'Land Rover', logo_url: createBrandLogo('Land', '#b45309') },
 ]
 
-const demoModels = {
+export const demoModels = {
   bmw: [
     { id: 'bmw-3-series', name: '3 Series', image_url: 'https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=900&q=80' },
     { id: 'bmw-5-series', name: '5 Series', image_url: 'https://images.unsplash.com/photo-1494905998402-395d179af9a7?auto=format&fit=crop&w=900&q=80' },

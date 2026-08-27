@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabaseClient'
 
 export default function ManageParts() {
+  const [brands, setBrands] = useState([])
   const [models, setModels] = useState([])
   const [parts, setParts] = useState([])
   const [modelId, setModelId] = useState('')
@@ -13,10 +14,12 @@ export default function ManageParts() {
   const [editingPart, setEditingPart] = useState(null)
 
   async function loadData() {
-    const [{ data: modelData }, { data: partData }] = await Promise.all([
+    const [{ data: brandData }, { data: modelData }, { data: partData }] = await Promise.all([
+      supabase.from('brands').select('*').order('name'),
       supabase.from('models').select('*, brands(name)').order('name'),
       supabase.from('parts').select('*, models(name, brands(name))').order('created_at', { ascending: false }),
     ])
+    setBrands(brandData || [])
     setModels(modelData || [])
     setParts(partData || [])
   }
@@ -104,7 +107,7 @@ export default function ManageParts() {
         <select required value={brandId} onChange={(e) => { setBrandId(e.target.value); setModelId('') }}
           className="w-full bg-carbon border border-steel rounded-sm px-4 py-3 focus:outline-none focus:border-ignition">
           <option value="">Select category/brand...</option>
-          {[...new Map(models.map((model) => [model.brand_id, model.brands?.name])).entries()].map(([id, name]) => <option key={id} value={id}>{name}</option>)}
+          {brands.map((brand) => <option key={brand.id} value={brand.id}>{brand.name}</option>)}
         </select>
         <select required value={modelId} onChange={(e) => setModelId(e.target.value)}
           className="w-full bg-carbon border border-steel rounded-sm px-4 py-3 focus:outline-none focus:border-ignition">

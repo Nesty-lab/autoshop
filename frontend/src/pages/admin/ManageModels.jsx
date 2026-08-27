@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabaseClient'
+import { demoBrands, demoModels } from '../BrandModels'
 
 export default function ManageModels() {
   const [brands, setBrands] = useState([])
@@ -12,10 +13,29 @@ export default function ManageModels() {
   const [editingName, setEditingName] = useState('')
 
   async function loadData() {
-    const [{ data: brandData }, { data: modelData }] = await Promise.all([
+    let [{ data: brandData }, { data: modelData }] = await Promise.all([
       supabase.from('brands').select('*').order('name'),
       supabase.from('models').select('*, brands(name)').order('name'),
     ])
+
+    if (!brandData?.length) {
+      await supabase.from('brands').insert(demoBrands.map(({ name, logo_url }) => ({ name, logo_url })))
+      const result = await supabase.from('brands').select('*').order('name')
+      brandData = result.data || []
+    }
+
+    if (!modelData?.length && brandData.length) {
+      const brandIds = new Map(brandData.map((brand) => [brand.name, brand.id]))
+      const seedModels = Object.entries(demoModels).flatMap(([brandKey, modelList]) => {
+        const brand = demoBrands.find((item) => item.id === brandKey)
+        const brandId = brandIds.get(brand?.name)
+        return brandId ? modelList.map(({ name, image_url }) => ({ brand_id: brandId, name, image_url })) : []
+      })
+      if (seedModels.length) await supabase.from('models').insert(seedModels)
+      const result = await supabase.from('models').select('*, brands(name)').order('name')
+      modelData = result.data || []
+    }
+
     setBrands(brandData || [])
     setModels(modelData || [])
   }
